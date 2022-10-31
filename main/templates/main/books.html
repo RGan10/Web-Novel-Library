@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load customtags%}
+{% block additional_jsandcss %}
+<style>
+    .custom {
+        min-width: 100;
+    }
+    a:link {
+        text-decoration: none;
+    }
+    .crop-text-2 {
+        -webkit-line-clamp: 2;
+        overflow : hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+      }
+</style>
+{% endblock additional_jsandcss %}
+{% block body %}
+<div class="container-fluid px-4">
+    <div class="row">
+        <div class="col"> 
+            {% if search %}
+            Search Results:<br><br>
+            {% endif %}
+    {% for book in books %}
+        {% if forloop.counter|loop5cards:4 == 0 %}
+        {% if forloop.counter != 1 %}</div>{% endif %}
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% endif %}
+            <a href="{% url 'main:bookid' book.id%}">
+                <div class="col">
+                    <div class="card text-center bg-dark mt-4">
+                        <img src="{{book.bookImage.url}}" class="img-fluid card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title"><div class="badge bg-warning text-black text-wrap" style="width: 9rem;">
+                                {{book.bookName}}
+                              </div></h5>
+                            <h6 class="card-text crop-text-2">{{book.bookGenre.all|join:", "}}</h6>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">{{book.bookRating}} / 10</small>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p>No books are available.</p>
+            {% endfor %}
+            </div>
+        </div>
+    {% if not mybooks %}
+    <div class="col-3">
+    <div class=" form-group mt-4 form-control p-3">
+    <form action="{% url 'main:search' %}">
+        <div class="text text-center"><p class="h2">Search</p>Genres<br>
+        <select name="genres_list" multiple="multiple" size="10" class="form-control">
+            {% for genre in genres %}
+                <option>{{genre}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <div class="form-check form-switch position-relative mt-2">
+            <input class="form-check-input position-relative top-50 start-50" type="checkbox" role="switch" id="flexSwitchCheckDefault" name = "and">
+        </div>
+        <div class="text-responsive">Include all genres</div>
+        <br>
+        <div class="text-responsive">Select Author<br>
+        <select name="author" class="form-control">
+                <option value="">--------</option>
+            {% for author in authors %}
+                <option value="{{author}}">{{author}}</option>
+            {% endfor %}
+        </select></div>
+        <div class="mt-5">
+            <input class="form-control" type="submit" value="Search">
+        </div>
+        </div>
+    </form>
+    {% endif %}
+    </div>
+    </div>
+    </div>
+    </div>
+</div>
+{% endblock body %}

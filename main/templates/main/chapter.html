@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block additional_jsandcss %}
+<style>
+a:link {
+    text-decoration: none;
+}
+</style>
+{% endblock additional_jsandcss %}
+{%block body%}
+<div class ="container-fluid">
+    <br>
+    <div class ="container bg-dark rounded">
+        <div class="row">
+            <div class="col-md-1 my-1 mr-1 px-1">
+                {% if previous.0 %}
+                    <a href = "{% url 'main:readbookchapter' book.id previous.1%}">
+                    <button class="btn text-white bg-black form-control"><</button></a>
+                {% else %}
+                    <button class="btn text-grey bg-secondary form-control"><</button>
+                {% endif %}
+            </div>
+            <div class="col-md mt-2">
+                <select name ="chapternumber" class="form-control form-select-sm" onchange = "javascript:location.href = '{% url 'main:bookid' book.id%}'+this.value;">
+                    {% for aChapter in book.book_chapters.all %}
+                        <option value="{{aChapter.chapterNumber}}"{% if chapter == aChapter %}selected{% endif %}>Chapter {{aChapter.chapterNumber}} : {{aChapter.chapterName}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1 my-1 mr-1 px-1">
+                {% if next.0 %}
+                <a href = "{% url 'main:readbookchapter' book.id next.1%}">
+                    <button class="btn text-white bg-black form-control">></button></a>
+                {% else %}
+                    <button class="btn text-grey bg-secondary form-control">></button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container bg-dark text-white rounded text-align: justify;">
+        <div class='h3 text-center pt-4 px-4'><p>Chapter {{chapter.chapterNumber}}: {{chapter.chapterName}}</p></div>
+        <div class="text p-4">
+            {% for paragraph in text %}
+            <p>
+            {{paragraph}}
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+    <div class ="container bg-dark rounded">
+        <div class="row">
+            <div class="col-md-1 my-1 mr-1 px-1">
+                {% if previous.0 %}
+                    <a href = "{% url 'main:readbookchapter' book.id previous.1%}">
+                    <button class="btn text-white bg-black form-control"><</button></a>
+                {% else %}
+                    <button class="btn text-grey bg-secondary form-control"><</button>
+                {% endif %}
+            </div>
+            <div class="col-md mt-2">
+                <select name ="chapternumber" class="form-control form-select-sm" onchange = "javascript:location.href = '{% url 'main:bookid' book.id%}'+this.value;">
+                    {% for aChapter in book.book_chapters.all %}
+                        <option value="{{aChapter.chapterNumber}}"{% if chapter == aChapter %}selected{% endif %}>Chapter {{aChapter.chapterNumber}} : {{aChapter.chapterName}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1 my-1 mr-1 px-1">
+                {% if next.0 %}
+                <a href = "{% url 'main:readbookchapter' book.id next.1%}">
+                    <button class="btn text-white bg-black form-control">></button></a>
+                {% else %}
+                    <button class="btn text-grey bg-secondary form-control">></button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock body%}

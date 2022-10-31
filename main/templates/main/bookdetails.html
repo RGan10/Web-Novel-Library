@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block additional_jsandcss %}
+<script src="{% static 'main/js/main.js' %}"></script>
+<style>
+  img.background {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  -webkit-filter: blur(10px); /* Safari 6.0 - 9.0 */
+  filter: blur(10px);
+  }
+</style>
+{% endblock additional_jsandcss %}
+{%block body%}
+<img class="background" src="{{book.bookImage.url}}">
+<br>
+<div class="container bg-dark text-white rounded">
+  <br>
+  <div class="row justify-content-md-center">
+    <div class="col-3">
+      <img src="{{book.bookImage.url}}" class ="img-fluid rounded float-start">
+    </div>
+    <div class="col-8">
+      <ul>
+        {% for message in messages %}
+          <p>{{message}}</p>
+        {% endfor %}
+        <div class="badge bg-warning text-wrap text-black fs-1">{{book.bookName}}</div>
+        <div class="h6">Book Author:</div> <form action="{% url 'main:search' %}" method = 'get'>
+            <div class="form-group h6"><div class="d-grid gap-2 d-sm-block"><button type="submit" value = "{{book.bookAuthor}}" name = 'author' class="btn btn-sm btn-secondary">{{book.bookAuthor}}</div>
+        </form></div>
+        <div class="h6">Book Genre: </div>
+        <div class="form-group h6">
+        <form action="{% url 'main:search' %}" method = 'get'>
+          {%for genre in book.bookGenre.all%}
+              <button type="submit" value ="{{genre}}" class="btn btn-sm btn-primary mt-2" name = 'genre'> {{genre}}</button>
+          {% endfor %}
+        </form></div>
+      </ul>
+      <ul>
+        <div class="h6">
+        <form action="{% url 'main:changechapter' book.id%}" method = post>{% csrf_token %}
+          <div class="d-grid gap-5 d-sm-block">
+            <button type="submit" class="btn btn-success btn-lg">Start Reading</button>
+          </div>
+        </form>
+        </div>
+      </ul>
+      <ul>
+          Book Rating: 
+          <div style="clearfix"><div class="h1" style="float:left">{{book.bookRating}}</div> <div class="h6" style="float:left">/10</div>
+          <div class="h6">({{book.totalNumberOfRating}})</div></div>
+
+          {% if not rated and request.user.is_authenticated %}
+          <form action="{% url 'main:ratebook' book.id %}" method='post'>{% csrf_token %}
+            {% for field in form %}
+              <input type="range" id="form_range"class="form-range" min="1" max="10" name="{{field.name}}" onInput="showrangeval()">
+              <button type="submit" id="rangeval" class="btn btn-danger" disabled>Slide above to rate this book</button>
+            {% endfor %}
+          </form> 
+          {% elif not request.user.is_authenticated %}
+          {% for field in form %}
+            <input type="range" id="form_range"class="form-range" min="1" max="10" name="{{field.name}}" onInput="showrangeval()" disabled>
+            <button type="submit" id="rangeval" class="btn btn-danger" disabled>Login to rate this book</button>
+          {% endfor %}
+          {% else %}
+          {% for field in form %}
+            <input type="range" id="form_range"class="form-range" min="1" max="10" name="{{field.name}}" onInput="showrangeval()"disabled>
+            <button type="submit" id="rangeval" class="btn btn-danger" disabled>You cannot rate a book more than once</button>
+          {% endfor %}
+          {% endif %}
+      </div>
+    </div>
+  </div>
+{%endblock body%}

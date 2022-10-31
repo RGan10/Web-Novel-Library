@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block additionalStyles %}
+<style>
+html,
+body {
+  height: 95.6%
+}
+</style>
+{%endblock%}
+{% block body %}
+<div class=" container-fluid h-100 d-flex align-items-center justify-content-center">
+    <div class = 'bg-dark rounded'>
+        <div class="container">
+            <div class="text text-center h3 pt-4">
+                Register
+            </div>
+            <div class="px-5 pt-2">
+                <form action="" method = "POST">{% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <div class="form-floating mb-3">
+                            <input name = '{{field.name}}' type="{{ field.field.widget.input_type }}" class="form-control form-control-lg" id="{{field.label}}" placeholder="{{field.label}}">
+                            <label for="{{field.lable}}">{{field.label}}</label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="text-danger text-center">
+                        {% for message in messages %}
+                            <p>{{message}}</p>
+                        {% endfor %}
+                        <input class = 'btn btn-primary' type="submit">
+                    </div>
+                </form>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+    
+{% endblock body %}
